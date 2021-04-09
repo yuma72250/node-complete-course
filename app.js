@@ -1,23 +1,21 @@
-const path = require('path')
+const path = require('path');
 
 // express import
 const express = require('express');
 
 const bodyParser = require('body-parser');
-const expressHbs = require('express-handlebars')
 
 // express app initializing
 const app = express();
 
-app.engine('hbs', expressHbs({layoutsDir: 'views/layouts/', defaultLayout: 'main-layout', extname: 'hbs'}))
-app.set('view engine', 'hbs') // view engine initialization
-app.set('views', 'views') // setting up routes for the views folder
+app.set('view engine', 'ejs'); // view engine initialization
+app.set('views', 'views'); // setting up routes for the views folder
 
 const adminData = require('./routes/admin.js');
 const shopRoutes = require('./routes/shop.js');
 
 app.use(bodyParser.urlencoded({extended: false}));
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/admin', adminData.routes);
 app.use(shopRoutes);

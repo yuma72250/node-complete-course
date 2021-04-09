@@ -16,7 +16,6 @@ router.get('/', (req, res, next) => {
         hasProducts: products.length > 0,
         activeShop: true,
         productCSS: true,
-        
     }); // render method to use default views engine
 })
 
