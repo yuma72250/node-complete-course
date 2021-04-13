@@ -21,6 +21,12 @@
                             <p class="product__description"><%= product.productData.description %></p>
                             <h4 style="text-align: center;">Quantity: <%= product.qty %> </h4>
                         </div>
+                        <form action="/cart-delete-item" method="POST">
+                            <div class="card__actions">
+                                <button class="btn" type="submit">Delete</button>
+                                <input type="hidden" name="productId" value="<%= product.productData.id %>">
+                            </div>
+                        </form>
                     </article>
                 <% } %>
             </div>
