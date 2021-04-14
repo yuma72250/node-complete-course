@@ -16,7 +16,7 @@ const shopRoutes = require('./routes/shop.js');
 
 const db = require('./util/database.js')
 
-db.execute('SELECT * FROM products')
+db.execute('SELECT * FROM products').then().catch();
 
 const errorController = require('./controllers/error')
 
