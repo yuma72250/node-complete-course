@@ -14,6 +14,10 @@ app.set('views', 'views'); // setting up routes for the views folder
 const adminRoutes = require('./routes/admin.js');
 const shopRoutes = require('./routes/shop.js');
 
+const db = require('./util/database.js')
+
+db.execute('SELECT * FROM products')
+
 const errorController = require('./controllers/error')
 
 app.use(bodyParser.urlencoded({extended: false}));
