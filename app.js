@@ -19,6 +19,15 @@ const sequelize = require('./util/database');
 const Product = require('../models/products');
 const User = require('../models/user');
 
+app.use((req, res, next) => {
+    User.findByPk(1)
+        .then(user => {
+            req.user = user;
+            next();
+        })
+        .catch(error => console.log(error));
+});
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -31,6 +40,18 @@ Product.belongsTo(User, { contraints: true, ondelete: 'CASCADE' });
 User.hasMany(Product);
 
 sequelize
-    .sync({ force: true })
-    .then(result => app.listen(8000))
+    .sync()
+    .then(result => {
+        return User.findByPk(1);
+    })
+    .then(user => {
+        if (!user) {
+            return User.create({ name: 'John', email: 'test@test.com' });
+        }
+        return user;
+    })
+    .then(user => {
+        console.log(user);
+        app.listen(8000);
+    })
     .catch(err => console.log(err));
