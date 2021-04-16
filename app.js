@@ -16,8 +16,8 @@ const shopRoutes = require('./routes/shop.js');
 
 const errorController = require('./controllers/error');
 const sequelize = require('./util/database');
-const Product = require('../models/products');
-const User = require('../models/user');
+const Product = require('./models/products');
+const User = require('./models/user');
 
 app.use((req, res, next) => {
     User.findByPk(1)
@@ -36,7 +36,7 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-Product.belongsTo(User, { contraints: true, ondelete: 'CASCADE' });
+Product.belongsTo(User, { contraints: true, onDelete: 'CASCADE' });
 User.hasMany(Product);
 
 sequelize
@@ -51,7 +51,7 @@ sequelize
         return user;
     })
     .then(user => {
-        console.log(user);
+        // console.log(user);
         app.listen(8000);
     })
     .catch(err => console.log(err));
