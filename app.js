@@ -15,7 +15,7 @@ const adminRoutes = require('./routes/admin.js');
 // const shopRoutes = require('./routes/shop.js');
 
 const errorController = require('./controllers/error');
-const mongoConnect = require('./util/database');
+const mongoConnect = require('./util/database').mongoConnect;
 
 app.use((req, res, next) => {
   // User.findByPk(1)
@@ -24,7 +24,8 @@ app.use((req, res, next) => {
   //     console.log(user);
   //     next();
   //   })
-  //   .catch(err => console.log(err));
+  //   .catch(err => console.log(err));\
+  next();
 });
 
 app.use(bodyParser.urlencoded({ extended: false }));
