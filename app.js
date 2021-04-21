@@ -11,7 +11,7 @@ const app = express();
 app.set('view engine', 'ejs'); // view engine initialization
 app.set('views', 'views'); // setting up routes for the views folder
 
-// const adminRoutes = require('./routes/admin.js');
+const adminRoutes = require('./routes/admin.js');
 // const shopRoutes = require('./routes/shop.js');
 
 const errorController = require('./controllers/error');
@@ -30,12 +30,11 @@ app.use((req, res, next) => {
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use('/admin', adminRoutes);
+app.use('/admin', adminRoutes);
 // app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-mongoConnect(client => {
-  console.log(client);
+mongoConnect(() => {
   app.listen(3000);
 });
