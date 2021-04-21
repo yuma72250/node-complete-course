@@ -1,13 +1,11 @@
 const mongodb = require('mongodb');
 const MongoClient = mongodb.MongoClient;
+const dataLink = require('../util/mdp').dataLink;
 
 let _db;
 
 const mongoConnect = callback => {
-  MongoClient.connect(
-    'mongodb+srv://user0:nodecomplete@cluster0.8jnyi.mongodb.net/shop?retryWrites=true&w=majority',
-    { useUnifiedTopology: true }
-  )
+  MongoClient.connect(dataLink, { useUnifiedTopology: true })
     .then(client => {
       console.log('Connected !');
       _db = client.db();
