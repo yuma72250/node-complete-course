@@ -5,6 +5,8 @@ const express = require('express');
 
 const bodyParser = require('body-parser');
 
+const mongoose = require('mongoose');
+
 // express app initializing
 const app = express();
 
@@ -35,6 +37,11 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-mongoConnect(() => {
-  app.listen(8000);
-});
+const dataLink = require('./util/mdp').dataLink;
+
+mongoose
+  .connect(dataLink, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(result => {
+    app.listen(3000);
+  })
+  .catch(err => console.log(err));
