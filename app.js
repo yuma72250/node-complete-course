@@ -16,13 +16,12 @@ const shopRoutes = require('./routes/shop.js');
 
 const errorController = require('./controllers/error');
 const mongoConnect = require('./util/database').mongoConnect;
-const User = require('./models/user')
+const User = require('./models/user');
 
 app.use((req, res, next) => {
   User.findById('60803bb604f30d4069895d1a')
     .then(user => {
-      req.user = user;
-      console.log(user);
+      req.user = new User(user.name, user.email, user.cart, user._id);
       next();
     })
     .catch(err => console.log(err));
