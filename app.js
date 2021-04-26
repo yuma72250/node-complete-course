@@ -1,40 +1,39 @@
 const path = require('path');
 
-// express import
 const express = require('express');
-
 const bodyParser = require('body-parser');
-
 const mongoose = require('mongoose');
-
-// express app initializing
-const app = express();
 const session = require('express-session');
-
-app.set('view engine', 'ejs'); // view engine initialization
-app.set('views', 'views'); // setting up routes for the views folder
-
-const adminRoutes = require('./routes/admin.js');
-const shopRoutes = require('./routes/shop.js');
-const authRoutes = require('./routes/auth.js');
+const MongoDBStore = require('connect-mongodb-session')(session);
 
 const errorController = require('./controllers/error');
-const mongoConnect = require('./util/database').mongoConnect;
 const User = require('./models/user');
 
-app.use((req, res, next) => {
-  User.findById('608273a5bd1eb42cb6c07aa9')
-    .then(user => {
-      req.user = user;
-      next();
-    })
-    .catch(err => console.log(err));
+const MONGODB_URI =
+  'mongodb+srv://user0:*@cluster0.8jnyi.mongodb.net/shop';
+
+const app = express();
+const store = new MongoDBStore({
+  uri: MONGODB_URI,
+  collection: 'sessions'
 });
+
+app.set('view engine', 'ejs');
+app.set('views', 'views');
+
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
+const authRoutes = require('./routes/auth');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(
-  session({ secret: 'my secret', resave: false, saveUninitialized: false })
+  session({
+    secret: 'my secret',
+    resave: false,
+    saveUninitialized: false,
+    store: store
+  })
 );
 
 app.use('/admin', adminRoutes);
@@ -43,21 +42,23 @@ app.use(authRoutes);
 
 app.use(errorController.get404);
 
-const dataLink = require('./util/mdp').dataLink;
-
 mongoose
-  .connect(dataLink, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(result => {
     User.findOne().then(user => {
       if (!user) {
         const user = new User({
-          name: 'yuma',
-          email: 'yuma@gmail.com',
-          cart: { items: [] },
+          name: 'Max',
+          email: 'max@test.com',
+          cart: {
+            items: []
+          }
         });
         user.save();
       }
     });
     app.listen(3000);
   })
-  .catch(err => console.log(err));
+  .catch(err => {
+    console.log(err);
+  });
