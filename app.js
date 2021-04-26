@@ -10,12 +10,12 @@ const errorController = require('./controllers/error');
 const User = require('./models/user');
 
 const MONGODB_URI =
-  'mongodb+srv://user0:*@cluster0.8jnyi.mongodb.net/shop';
+  'mongodb+srv://user0:nodecomplete@cluster0.8jnyi.mongodb.net/shop';
 
 const app = express();
 const store = new MongoDBStore({
   uri: MONGODB_URI,
-  collection: 'sessions'
+  collection: 'sessions',
 });
 
 app.set('view engine', 'ejs');
@@ -32,9 +32,21 @@ app.use(
     secret: 'my secret',
     resave: false,
     saveUninitialized: false,
-    store: store
+    store: store,
   })
 );
+
+app.use((req, res, next) => {
+  if (!req.session.user) {
+    return next();
+  }
+  User.findById(req.session.user._id)
+    .then(user => {
+      req.user = user;
+      next();
+    })
+    .catch(err => console.log(err));
+});
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
@@ -51,8 +63,8 @@ mongoose
           name: 'Max',
           email: 'max@test.com',
           cart: {
-            items: []
-          }
+            items: [],
+          },
         });
         user.save();
       }
