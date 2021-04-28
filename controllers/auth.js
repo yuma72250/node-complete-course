@@ -8,7 +8,7 @@ const transporter = nodemailer.createTransport(
   sendgridTransport({
     auth: {
       api_key:
-        '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',
+        '*',
     },
   })
 );
@@ -96,7 +96,7 @@ exports.postSignup = (req, res, next) => {
           return transporter
             .sendMail({
               to: email,
-              from: 'yuma.ollivier@hotmail.com',
+              from: '*',
               subject: 'Signup succeeded !',
               html: '<h1>You successfully signed up !</h1>',
             })
