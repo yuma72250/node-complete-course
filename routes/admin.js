@@ -13,25 +13,25 @@ router.get('/products', isAuth, adminController.getProducts);
 
 router.post('/add-product', isAuth, adminController.postAddProducts);
 
-router.get(
-  '/edit-product/:productId',
+router.get('/edit-product/:productId', isAuth, adminController.getEditProducts);
+
+router.post(
+  '/edit-product',
   [
     body('title').isString().isLength({ min: 3 }).trim(),
     body('price').isFloat(),
-    body('title').isLength({ min: 5, max: 400 }).trim(),
+    body('description').isLength({ min: 5, max: 400 }).trim(),
   ],
   isAuth,
-  adminController.getEditProducts
+  adminController.postEditProduct
 );
-
-router.post('/edit-product', isAuth, adminController.postEditProduct);
 
 router.post(
   '/delete-product',
   [
     body('title').isString().isLength({ min: 3 }).trim(),
     body('price').isFloat(),
-    body('title').isLength({ min: 5, max: 400 }).trim(),
+    body('description').isLength({ min: 5, max: 400 }).trim(),
   ],
   isAuth,
   adminController.postDeleteProduct
